@@ -1,0 +1,23 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredPackages">
+        <value>
+          <list size="10">
+            <item index="0" class="java.lang.String" itemvalue="optuna-dashboard" />
+            <item index="1" class="java.lang.String" itemvalue="cvxpy" />
+            <item index="2" class="java.lang.String" itemvalue="scikit-optimize" />
+            <item index="3" class="java.lang.String" itemvalue="Mosek" />
+            <item index="4" class="java.lang.String" itemvalue="pytope" />
+            <item index="5" class="java.lang.String" itemvalue="gpytorch" />
+            <item index="6" class="java.lang.String" itemvalue="dict-deep" />
+            <item index="7" class="java.lang.String" itemvalue="casadi" />
+            <item index="8" class="java.lang.String" itemvalue="pycddlib" />
+            <item index="9" class="java.lang.String" itemvalue="optuna" />
+          </list>
+        </value>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>

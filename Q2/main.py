@@ -117,6 +117,45 @@ def calculate_accel_orientation_error(calib_accel):
 
     return total_error, roll_error, pitch_error
 
+
+def has_valid_rest_period(calib_accel, std_threshold=20, window_size=50,
+                          magnitude_tolerance=20):
+    """
+    Detect if there is at least one rest period where the calibrated acceleration magnitude
+    is close to the expected gravity value (9.81 m/s²).
+
+    Args:
+        calib_accel (ndarray): Calibrated accelerometer data (3, N)
+        std_threshold (float): Maximum standard deviation of acceleration magnitude
+                              within a window to consider the sensor at rest
+        window_size (int): Size of the rolling window
+        magnitude_tolerance (float): Maximum allowed deviation from 9.81 m/s²
+
+    Returns:
+        bool: True if there's at least one rest period with acceleration close to 9.81 m/s²
+    """
+    N = calib_accel.shape[1]
+
+    # Compute calibrated acceleration magnitude
+    calib_accel_mag = np.sqrt(np.sum(calib_accel ** 2, axis=0))
+
+    # Use rolling windows to find rest periods
+    for i in range(N - window_size + 1):
+        # Extract window
+        window = calib_accel_mag[i:i + window_size]
+
+        # Check if this is a rest period (low std dev)
+        window_std = np.std(window)
+
+        if window_std < std_threshold:
+            # This is a rest period - check if mean magnitude is close to 9.81
+            mean_mag = np.mean(window)
+            if abs(mean_mag - 9.81) <= magnitude_tolerance:
+                return True
+
+    # No valid rest period found
+    return False
+
 def find_best_calib_accel(accel):
     """
     Performs grid search to find optimal accelerometer calibration parameters.
@@ -134,7 +173,7 @@ def find_best_calib_accel(accel):
     #sensitivity_values = [25, 30, 35, 40, 45, 50]  # 25-50 mV/(m/s²)
 
     bias_values = [470, 480, 490, 500, 510, 520, 530]  # Around 500
-    sensitivity_values = [25, 30, 35, 40, 45, 50]  # 25-50 mV/(m/s²)
+    sensitivity_values = [25, 30, 35, 40, 45, 50, 350]  # 25-50 mV/(m/s²)
 
     # Initialize for best parameters
     best_error = float('inf')
@@ -150,8 +189,9 @@ def find_best_calib_accel(accel):
     # Loop through all parameter combinations
     for bias in bias_values:
         for sensitivity in sensitivity_values:
-            if bias == 500:
-                print("sadkl;hv lk  hE DJKLSHAF LKJSDHFL JKSADF ")
+            # don't use if not a valid rest period
+
+
             # Create parameter arrays (same value for all axes)
             accel_bias = np.array([bias, bias, bias])
             accel_sensitivity = np.array(
@@ -160,6 +200,9 @@ def find_best_calib_accel(accel):
             # Apply calibration
             calib_accel = calibrate_accel(accel, accel_bias,
                                                   accel_sensitivity)
+            if not has_valid_rest_period(calib_accel):
+                continue
+
 
             # Calculate orientation error
             total_error, roll_error, pitch_error = mean_absolute_error(

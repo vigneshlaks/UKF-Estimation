@@ -1,6 +1,7 @@
 import numpy as np
 import math
 
+
 class Quaternion:
     def __init__(self, scalar=1, vec=[0,0,0]): 
         self.q = np.array([scalar, 0., 0., 0.])
@@ -77,7 +78,6 @@ class Quaternion:
 
     def __str__(self):
         return str(self.scalar()) + ', ' + str(self.vec())
-
 
 #q = Quaternion()
 #R = np.array([[1, 0, 0],[0, 0.707, -0.707],[0, 0.707, 0.707]])

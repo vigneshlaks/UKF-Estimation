@@ -33,7 +33,7 @@ def initialize_ukf():
         angular_velocity_var, angular_velocity_var, angular_velocity_var
     ])
 
-    orientation_process_noise = 0.01
+    orientation_process_noise = 1
     angular_velocity_process_noise = .1
 
     process_noise = np.diag([
@@ -43,8 +43,8 @@ def initialize_ukf():
         angular_velocity_process_noise
     ])
 
-    accel_noise = 2
-    gyro_noise = 0.05
+    accel_noise = 5
+    gyro_noise = 5
 
     measurement_noise = np.diag([
         accel_noise, accel_noise, accel_noise,

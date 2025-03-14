@@ -39,7 +39,7 @@ class Quaternion:
             axis = np.array([1,0,0])
         self.q[0] = math.cos(angle/2)
         self.q[1:4] = axis*math.sin(angle/2)
-        #self.normalize()
+        self.normalize()
 
     def from_rotm(self, R):
         theta = math.acos((np.trace(R)-1)/2)
